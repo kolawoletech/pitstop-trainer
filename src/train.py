@@ -98,17 +98,21 @@ preprocessor = ColumnTransformer(
 lgb_params = {
     "objective":"binary",
     "metric":"auc",
-    "n_estimators":931,
-    "learning_rate":0.05325809257332312,
-    "num_leaves":83,
-    "max_depth":9,
-    "min_child_samples":156,
-    "subsample":0.5820389823067827,
-    "colsample_bytree":0.5198555301603772,
-    "reg_alpha":9.692844859786788,
-    "reg_lambda":3.2948430607114104e-08,
-    "is_unbalance":True,
-    "verbosity":-1
+    "n_estimators":2000,
+    "learning_rate":0.03,
+
+    "num_leaves":127,
+    "max_depth":-1,
+
+    "min_child_samples":30,
+
+    "subsample":0.8,
+    "colsample_bytree":0.8,
+
+    "reg_alpha":0.5,
+    "reg_lambda":0.5,
+
+    "verbosity":-1,
 }
 
 xgb_params = {
@@ -154,7 +158,10 @@ for seed in SEEDS:
         Xv = preprocessor.transform(X_va)
         Xs = preprocessor.transform(X_te)
 
-        lgb = LGBMClassifier(random_state=seed, **lgb_params)
+        lgb = LGBMClassifier(
+            random_state=seed,
+            **lgb_params
+        )
         xgb = XGBClassifier(random_state=seed, **xgb_params)
 
         cat = CatBoostClassifier(
@@ -186,18 +193,9 @@ submission_lgb = pd.DataFrame({
     "PitNextLap": pred_lgb
 })
 
-submission_xgb = pd.DataFrame({
-    "id": test["id"],
-    "PitNextLap": pred_xgb
-})
 
-submission_cat = pd.DataFrame({
-    "id": test["id"],
-    "PitNextLap": pred_cat
-})
 
 submission_lgb.to_csv("submission_lgb.csv", index=False)
-submission_xgb.to_csv("submission_xgb.csv", index=False)
-submission_cat.to_csv("submission_cat.csv", index=False)
 
-print("Saved individual model submissions")
+
+print("Saved individual model submissions lgb")
