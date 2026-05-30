@@ -181,11 +181,23 @@ final_pred = (
     0.25 * pred_cat
 )
 
-submission = pd.DataFrame({
+submission_lgb = pd.DataFrame({
     "id": test["id"],
-    "PitNextLap": final_pred
+    "PitNextLap": pred_lgb
 })
 
-submission.to_csv("submission.csv", index=False)
-print(submission.head())
-print("saved submission.csv")
+submission_xgb = pd.DataFrame({
+    "id": test["id"],
+    "PitNextLap": pred_xgb
+})
+
+submission_cat = pd.DataFrame({
+    "id": test["id"],
+    "PitNextLap": pred_cat
+})
+
+submission_lgb.to_csv("submission_lgb.csv", index=False)
+submission_xgb.to_csv("submission_xgb.csv", index=False)
+submission_cat.to_csv("submission_cat.csv", index=False)
+
+print("Saved individual model submissions")
